@@ -116,6 +116,12 @@ class CategoryApiViewSet(ModelViewSet):
     search_fields = ["name"]
     pagination_class = LimitOffsetPagination
 
+    @action(detail=False,methods=["get"])
+    def count(self,request,*args,**kwargs):
+        categories = self.get_queryset().order_by("-product_count")
+        serializer = CategorySerializer(categories,many=True)
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
+
 
 class ProductApiViewSet(ModelViewSet):
     queryset = Product.objects.all()
